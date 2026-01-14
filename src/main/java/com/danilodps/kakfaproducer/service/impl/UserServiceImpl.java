@@ -1,6 +1,7 @@
 package com.danilodps.kakfaproducer.service.impl;
 
 import com.danilodps.kakfaproducer.entity.UserEntity;
+import com.danilodps.kakfaproducer.producer.KafkaProducer;
 import com.danilodps.kakfaproducer.record.request.UserRequest;
 import com.danilodps.kakfaproducer.record.response.UserResponse;
 import com.danilodps.kakfaproducer.repository.UserEntityRepository;
@@ -17,22 +18,29 @@ import java.time.LocalDateTime;
 public class UserServiceImpl implements UserService {
 
     private final UserEntityRepository userEntityRepository;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public UserResponse create(UserRequest userRequest) {
         log.info("Criando usuário...");
+
         UserEntity userEntity = UserEntity.builder()
                 .name(userRequest.name())
                 .lastName(userRequest.lastName())
                 .createdAt(LocalDateTime.now())
                 .build();
+
         userEntityRepository.saveAndFlush(userEntity);
         log.info("Usuário criado!");
-        return UserResponse.builder()
+        UserResponse userResponse = UserResponse.builder()
                 .userId(userEntity.getUserId())
                 .name(userEntity.getName())
                 .lastName(userEntity.getLastName())
                 .createdAt(userEntity.getCreatedAt())
                 .build();
+
+        kafkaProducer.send(userResponse);
+
+        return userResponse;
     }
 }
