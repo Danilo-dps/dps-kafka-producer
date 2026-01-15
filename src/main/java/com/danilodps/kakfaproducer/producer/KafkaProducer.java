@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 public class KafkaProducer {
 
     private final KafkaTemplate <String, Object> kafkaTemplate;
-    private static final String USER_V1_CREATED = "user-create-v1";
+    private static final String TOPIC_USER_V1 = "topic.user.v1";
 
     public void send(UserResponse userResponse){
-        log.info("Usuário v1 criado com o UUID: {}", userResponse.userId());
-        kafkaTemplate.send(USER_V1_CREATED, userResponse.userId().toString(), userResponse);
+        log.info("Usuário v1 criado com o userId: {}", userResponse.userId());
+        kafkaTemplate.send(TOPIC_USER_V1, userResponse.userId().toString(), userResponse);
     }
 }
