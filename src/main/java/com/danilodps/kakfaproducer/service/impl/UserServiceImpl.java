@@ -6,6 +6,7 @@ import com.danilodps.kakfaproducer.record.request.UserRequest;
 import com.danilodps.kakfaproducer.record.response.UserResponse;
 import com.danilodps.kakfaproducer.repository.UserEntityRepository;
 import com.danilodps.kakfaproducer.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private final KafkaProducer kafkaProducer;
 
     @Override
+    @Transactional
     public UserResponse create(UserRequest userRequest) {
         log.info("Criando usuário...");
 
@@ -33,10 +35,9 @@ public class UserServiceImpl implements UserService {
         userEntityRepository.saveAndFlush(userEntity);
         log.info("Usuário criado!");
         UserResponse userResponse = UserResponse.builder()
-                .userId(userEntity.getUserId())
+                .userId(userEntity.getUserId().toString())
                 .name(userEntity.getName())
                 .lastName(userEntity.getLastName())
-                .createdAt(userEntity.getCreatedAt())
                 .build();
 
         kafkaProducer.send(userResponse);

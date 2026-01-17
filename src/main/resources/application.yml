@@ -5,14 +5,12 @@ spring:
   Kafka:
     bootstrap:
       servers: localhost:9092
-    properties:
-      spring.json.trusted.packages: "*"
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/user-created
-    driver-class-name: org.postgresql.Driver
-    username: usuario
-    password: senha123
+datasource:
+  url: jdbc:postgresql://localhost:5432/user-created
+  driver-class-name: org.postgresql.Driver
+  username: usuario
+  password: senha123
 
   jpa:
     hibernate:
@@ -26,3 +24,7 @@ spring:
 
 server:
   port: 8081
+
+  logging:
+    level:
+      org.apache.kafka: DEBUG
