@@ -1,5 +1,7 @@
 package com.danilodps.kakfaproducer.service.impl;
 
+import com.danilodps.kakfaproducer.adapter.UserEntity2UserResponse;
+import com.danilodps.kakfaproducer.adapter.UserRequest2UserEntity;
 import com.danilodps.kakfaproducer.entity.UserEntity;
 import com.danilodps.kakfaproducer.producer.KafkaProducer;
 import com.danilodps.kakfaproducer.record.request.UserRequest;
@@ -25,23 +27,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponse create(UserRequest userRequest) {
         log.info("Criando usuário...");
-
-        UserEntity userEntity = UserEntity.builder()
-                .name(userRequest.name())
-                .lastName(userRequest.lastName())
-                .createdAt(LocalDateTime.now())
-                .build();
+        UserEntity userEntity = UserRequest2UserEntity.convert(userRequest);
 
         userEntityRepository.saveAndFlush(userEntity);
-        log.info("Usuário criado!");
-        UserResponse userResponse = UserResponse.builder()
-                .userId(userEntity.getUserId().toString())
-                .name(userEntity.getName())
-                .lastName(userEntity.getLastName())
-                .build();
+        log.info("Usuário criado com userId {}", userEntity.getUserId());
 
+        UserResponse userResponse = UserEntity2UserResponse.convert(userEntity);
         kafkaProducer.send(userResponse);
-
+        log.info("Usuário enviado via kafka com userId {}", userEntity.getUserId());
         return userResponse;
     }
 }
