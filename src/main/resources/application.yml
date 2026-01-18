@@ -3,10 +3,10 @@ spring:
     name: dps-kafka-producer
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/user-created
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
     driver-class-name: org.postgresql.Driver
-    username: usuario
-    password: senha123
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
 
   jpa:
     hibernate:
@@ -20,7 +20,7 @@ spring:
 
   kafka:
     bootstrap:
-      servers: localhost:9092
+      servers: localhost:${KAFKA_PORT}
 
 server:
   port: 8081
