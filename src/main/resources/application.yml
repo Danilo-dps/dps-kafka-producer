@@ -23,7 +23,7 @@ spring:
       servers: localhost:${KAFKA_PORT}
     producer:
       topic:
-        kafka-topic: "topic.user.v1"
+        kafka-topic: "topic-user-v1"
 
 server:
   port: 8081
