@@ -1,6 +1,5 @@
 package com.danilodps.kakfaproducer.config;
 
-import com.danilodps.kakfaproducer.record.response.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
