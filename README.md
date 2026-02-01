@@ -1,13 +1,37 @@
-# Exemplo de estudo sobre como distribuir mensagens via kafka
-- [Kafka](https://kafka.apache.org/41/getting-started/) é um **software** de código aberto que permite que aplicações se conectem ao kafka para **produzir/consumir** mensagens
-- Kafka é um servidor de mensageria robusto no seu tratamento de **produção/consumo** de mensagens
-- Tem uma estrutura configurável de como ele deve se comportar, garante distribuição, e confirmação de que algo foi processado ou não
-- Este projeto aqui é um producer, que envia para o [consumer](https://github.com/Danilo-dps/dps-kakfa-consumer)
-- Nesse exemplo, essa pequena API tem um endpoint para criar um usuário no banco de dados, onde o **request** tem nome, e sobrenome
-- Na camada do serviço que faz a persistência do dado, é chamado o método que envia a mensagem para o **tópico** que está no servidor kafka conectado a aplicação
-- Para esse exemplo de estudos, é feito uso de um container kafka, e nesse container é criado o tópico que recebe as mensagens
-- Quando o evento chega no tópico, o serviço conectado a ele ([consumer](https://github.com/Danilo-dps/dps-kakfa-consumer)) é acionado para consumir 
-- O fluxo atual é bem simples, na API que está o producer é criado uma tabela que tem as seguintes colunas: **userId**, **name**, **lastName** e **createdAt**
-- O [consumer](https://github.com/Danilo-dps/dps-kakfa-consumer) por sua vez tem um serviço que ao consumir essa mensagem, chama um método responsável por criar outro registro em outra tabela no mesmo banco de dados,
- onde é feito uma persistência de dados com as seguintes colunas: **userId**, **fullName** e **createdAt**
-- O foco nesse exemplo é mostrar a produção e consumo de mensagens entre serviços
+# 🚀 Estudo de Mensageria Distribuída: Kafka & Spring Boot
+
+Este repositório faz parte de um estudo prático sobre como distribuir mensagens entre aplicações utilizando o ecossistema **Apache Kafka** em conjunto com persistência em banco de dados **PostgreSQL**.
+
+## 🏗️ Arquitetura e Tecnologias
+
+O projeto utiliza uma estrutura moderna baseada em containers para garantir a escalabilidade e facilidade de configuração:
+
+* **[Apache Kafka](https://kafka.apache.org/):** Software de código aberto que atua como uma plataforma de streaming de eventos, permitindo a produção e consumo de mensagens de forma robusta e resiliente.
+* **KRaft (Kafka Raft):** Gerente de metadados do cluster. Ele substitui o antigo ZooKeeper, coordenando o estado do Kafka de forma nativa e simplificada.
+* **PostgreSQL:** O Sistema Gerenciador de Banco de Dados (SGBD) onde as informações são persistidas.
+* **pgAdmin:** Interface gráfica para administração e visualização simplificada do banco de dados.
+
+## 🔄 Fluxo da Aplicação
+
+O objetivo central é demonstrar a comunicação assíncrona entre dois serviços distintos:
+
+1.  **Ação do Usuário:** Uma API (Producer) recebe um request com `name` e `lastName`.
+2.  **Persistência Inicial:** O serviço salva o usuário no banco de dados com as colunas: `userId`, `name`, `lastName` e `createdAt`.
+3.  **Produção de Evento:** A aplicação envia uma mensagem para um **tópico** específico no servidor Kafka.
+4.  **Consumo (Consumer):** O serviço [Consumer](https://github.com/Danilo-dps/dps-kakfa-consumer) monitora o tópico e, ao detectar o evento, inicia o processamento.
+5.  **Transformação de Dados:** O Consumer chama um método para criar um novo registro em outra tabela, consolidando os dados para: `userId`, `fullName` e `createdAt`.
+
+## 🛠️ Infraestrutura (Docker)
+
+Para rodar o ambiente de estudos, utilizamos o Docker Compose para subir todos os serviços de forma orquestrada.
+
+| Serviço | Papel |
+| :--- | :--- |
+| **Kafka (KRaft mode)** | Broker de mensagens |
+| **PostgreSQL** | Armazenamento dos dados |
+| **pgAdmin** | Gestão visual do banco |
+
+> Confira o [arquivo docker-compose.yaml](https://github.com/Danilo-dps/docker-yamls/blob/main/projetos-com-kafka/docker-compose.yaml) utilizado para configurar este ambiente.
+
+---
+*Estudo focado na implementação de padrões de produção e consumo de mensagens entre serviços.*
