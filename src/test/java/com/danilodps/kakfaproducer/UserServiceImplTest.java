@@ -7,6 +7,7 @@ import com.danilodps.kakfaproducer.record.request.UserRequest;
 import com.danilodps.kakfaproducer.record.response.UserResponse;
 import com.danilodps.kakfaproducer.repository.UserEntityRepository;
 import com.danilodps.kakfaproducer.service.impl.UserServiceImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,7 @@ class UserServiceImplTest {
     void setup(){
         userRequest = UserRequest.builder()
                 .name("Danilo")
-                .lastName("Pereia")
+                .lastName("Pereira")
                 .build();
 
         userEntity = UserEntity.builder()
@@ -71,5 +72,8 @@ class UserServiceImplTest {
 
         verify(userEntityRepository, atLeastOnce()).saveAndFlush(any(UserEntity.class));
         verify(kafkaProducer, atLeastOnce()).send(any(UserResponse.class));
+        Assertions.assertEquals("Danilo", userEntity.getName());
+        Assertions.assertEquals("Pereira", userEntity.getLastName());
+        Assertions.assertNotNull(userEntity.getCreatedAt());
     }
 }
