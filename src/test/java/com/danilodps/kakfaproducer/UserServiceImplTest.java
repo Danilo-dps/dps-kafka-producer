@@ -1,12 +1,12 @@
 package com.danilodps.kakfaproducer;
 
-import com.danilodps.kakfaproducer.adapter.UserEntity2UserResponse;
-import com.danilodps.kakfaproducer.entity.UserEntity;
-import com.danilodps.kakfaproducer.producer.KafkaProducer;
-import com.danilodps.kakfaproducer.record.request.UserRequest;
-import com.danilodps.kakfaproducer.record.response.UserResponse;
-import com.danilodps.kakfaproducer.repository.UserEntityRepository;
-import com.danilodps.kakfaproducer.service.impl.UserServiceImpl;
+import com.danilodps.kakfaproducer.domain.adapter.UserEntity2UserResponse;
+import com.danilodps.kakfaproducer.domain.model.entity.UserEntity;
+import com.danilodps.kakfaproducer.application.producer.KafkaProducer;
+import com.danilodps.kakfaproducer.domain.model.record.request.UserCreateRequest;
+import com.danilodps.kakfaproducer.domain.model.record.response.UserResponse;
+import com.danilodps.kakfaproducer.domain.repository.UserEntityRepository;
+import com.danilodps.kakfaproducer.domain.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,21 +33,21 @@ class UserServiceImplTest {
     @InjectMocks
     UserServiceImpl userService;
 
-    UserRequest userRequest;
+    UserCreateRequest userCreateRequest;
     UserEntity userEntity;
     UserResponse userResponse;
 
     @BeforeEach
     void setup(){
-        userRequest = UserRequest.builder()
+        userCreateRequest = UserCreateRequest.builder()
                 .name("Danilo")
                 .lastName("Pereira")
                 .build();
 
         userEntity = UserEntity.builder()
                 .userId(UUID.fromString("871982fe-57a2-4eab-af9f-97e880ee2cbf"))
-                .name(userRequest.name())
-                .lastName(userRequest.lastName())
+                .name(userCreateRequest.name())
+                .lastName(userCreateRequest.lastName())
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -65,13 +65,13 @@ class UserServiceImplTest {
         try (MockedStatic<UserEntity2UserResponse> mockedStatic = mockStatic(UserEntity2UserResponse.class)) {
             mockedStatic.when(() -> UserEntity2UserResponse.convert(any(UserEntity.class)))
                     .thenReturn(userResponse);
-            userService.create(userRequest);
+            userService.create(userCreateRequest);
             mockedStatic.verify(() -> UserEntity2UserResponse.convert(any(UserEntity.class)));
-            kafkaProducer.send(userResponse);
+            kafkaProducer.send("test-topic",userResponse);
         }
 
         verify(userEntityRepository, atLeastOnce()).saveAndFlush(any(UserEntity.class));
-        verify(kafkaProducer, atLeastOnce()).send(any(UserResponse.class));
+        verify(kafkaProducer, atLeastOnce()).send(anyString(), any(UserResponse.class));
         Assertions.assertEquals("Danilo", userEntity.getName());
         Assertions.assertEquals("Pereira", userEntity.getLastName());
         Assertions.assertNotNull(userEntity.getCreatedAt());

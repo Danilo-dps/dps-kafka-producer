@@ -1,4 +1,4 @@
-package com.danilodps.kakfaproducer.entity;
+package com.danilodps.kakfaproducer.domain.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,4 +30,8 @@ public class UserEntity implements Serializable {
 
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
+
+    @Column(name = "UPDATED_AT")
+    private LocalDateTime updatedAt;
+
 }

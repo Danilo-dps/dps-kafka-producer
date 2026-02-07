@@ -1,4 +1,4 @@
-package com.danilodps.kakfaproducer.config;
+package com.danilodps.kakfaproducer.application.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

@@ -1,7 +1,7 @@
-package com.danilodps.kakfaproducer.adapter;
+package com.danilodps.kakfaproducer.domain.adapter;
 
-import com.danilodps.kakfaproducer.entity.UserEntity;
-import com.danilodps.kakfaproducer.record.response.UserResponse;
+import com.danilodps.kakfaproducer.domain.model.entity.UserEntity;
+import com.danilodps.kakfaproducer.domain.model.record.response.UserResponse;
 
 public class UserEntity2UserResponse {
 

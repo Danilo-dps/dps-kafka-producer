@@ -1,4 +1,4 @@
-package com.danilodps.kakfaproducer.record.response;
+package com.danilodps.kakfaproducer.domain.model.record.response;
 
 import lombok.Builder;
 
