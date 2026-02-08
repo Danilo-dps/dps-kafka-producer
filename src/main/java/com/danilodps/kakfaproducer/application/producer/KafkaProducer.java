@@ -19,7 +19,7 @@ public class KafkaProducer {
 
     @Async("taskExecutor")
     public void send(String topic, UserResponse userResponse){
-        log.info("Enviando criado usuário: {}", userResponse.userId());
+        log.info("Enviando usuário: {}", userResponse.userId());
         kafkaTemplate.send(topic, userResponse.userId(), userResponse);
     }
 }

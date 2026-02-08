@@ -76,4 +76,29 @@ class UserServiceImplTest {
         Assertions.assertEquals("Pereira", userEntity.getLastName());
         Assertions.assertNotNull(userEntity.getCreatedAt());
     }
+
+
+    @Test
+    void testUpdateAUser() {
+        userEntity.setUpdatedAt(LocalDateTime.now());
+        userEntity.setLastName("Pereira Update");
+        userEntityRepository.saveAndFlush(any(UserEntity.class));
+        kafkaProducer.send(anyString(), any(UserResponse.class));
+
+        Assertions.assertEquals("Danilo", userEntity.getName());
+        Assertions.assertEquals("Pereira Update", userEntity.getLastName());
+        Assertions.assertNotNull(userEntity.getCreatedAt());
+        verify(kafkaProducer, atLeastOnce()).send(anyString(), any());
+        verify(userEntityRepository, atLeastOnce()).saveAndFlush(any());
+    }
+
+    @Test
+    void testDeleteAUser() {
+
+        kafkaProducer.send(anyString(), any(UserResponse.class));
+        userEntityRepository.delete(userEntity);
+
+        verify(userEntityRepository, atLeastOnce()).delete(any());
+        verify(kafkaProducer, atLeastOnce()).send(anyString(), any());
+    }
 }
