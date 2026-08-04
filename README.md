@@ -9,7 +9,6 @@ O projeto utiliza uma estrutura moderna baseada em containers para garantir a es
 * **[Apache Kafka](https://kafka.apache.org/):** Software de código aberto que atua como uma plataforma de streaming de eventos, permitindo a produção e consumo de mensagens de forma robusta e resiliente.
 * **KRaft (Kafka Raft):** Gerente de metadados do cluster. Ele substitui o antigo ZooKeeper, coordenando o estado do Kafka de forma nativa e simplificada.
 * **PostgreSQL:** O Sistema Gerenciador de Banco de Dados (SGBD) onde as informações são persistidas.
-* **pgAdmin:** Interface gráfica para administração e visualização simplificada do banco de dados.
 
 ## 🔄 Fluxo da Aplicação
 
@@ -29,7 +28,6 @@ Para rodar o ambiente de estudos, utilizamos o Docker Compose para subir todos o
 | :--- | :--- |
 | **Kafka (KRaft mode)** | Broker de mensagens |
 | **PostgreSQL** | Armazenamento dos dados |
-| **pgAdmin** | Gestão visual do banco |
 
 > Confira o [arquivo docker-compose.yaml](https://github.com/Danilo-dps/docker-yamls/blob/main/projetos-com-kafka/docker-compose.yaml) utilizado para configurar este ambiente.
 
