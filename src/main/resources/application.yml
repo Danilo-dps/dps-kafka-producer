@@ -28,7 +28,7 @@ spring:
         kafka-deleted: "topic-user-deleted"
 
 server:
-  port: 8083
+  port: ${SERVER_PORT}
 
 #logging:
 #  level:
